@@ -1,0 +1,192 @@
+-- Databricks notebook source
+-- MAGIC % sql 
+-- MAGIC - ============================================================
+-- MAGIC -- BRIGHT COFFEE SHOP - SALES PERFORMANCE ANALYSIS
+-- MAGIC -- Author: Siyakha Ntuli
+-- MAGIC -- Date: July 2026
+-- MAGIC -- Purpose: Analyse transactional sales data to provide
+-- MAGIC --          insights on revenue drivers, product performance,
+-- MAGIC --          and peak trading times for the CEO
+-- MAGIC -- ============================================================
+-- MAGIC
+-- MAGIC -- ============================================================
+-- MAGIC -- SECTION 1: DATA EXPLORATION
+-- MAGIC -- Purpose: Understand the structure and content of raw tables
+-- MAGIC --          before any transformation or analysis
+-- MAGIC -- ============================================================
+-- MAGIC
+-- MAGIC -- 1.1 Inspect column names and data types
+-- MAGIC DESCRIBE retail.default.bright_coffee_shop_sales;
+-- MAGIC
+-- MAGIC -- 1.2 Check date range of the data
+-- MAGIC SELECT 
+-- MAGIC     MIN(transaction_date) AS first_transaction_date,
+-- MAGIC     MAX(transaction_date) AS last_transaction_date,
+-- MAGIC     DATEDIFF(MAX(transaction_date), MIN(transaction_date)) AS days_of_data
+-- MAGIC FROM retail.default.bright_coffee_shop_sales;
+-- MAGIC
+-- MAGIC -- 1.3 See all distinct store locations
+-- MAGIC SELECT DISTINCT store_location 
+-- MAGIC FROM retail.default.bright_coffee_shop_sales
+-- MAGIC ORDER BY store_location;
+-- MAGIC
+-- MAGIC -- 1.4 See all product categories
+-- MAGIC SELECT DISTINCT product_category 
+-- MAGIC FROM retail.default.bright_coffee_shop_sales
+-- MAGIC WHERE product_category IS NOT NULL AND product_category != ''
+-- MAGIC ORDER BY product_category;
+-- MAGIC
+-- MAGIC -- 1.5 See all product types
+-- MAGIC SELECT DISTINCT product_type 
+-- MAGIC FROM retail.default.bright_coffee_shop_sales
+-- MAGIC WHERE product_type IS NOT NULL AND product_type != ''
+-- MAGIC ORDER BY product_type;
+-- MAGIC
+-- MAGIC -- 1.6 See all product details
+-- MAGIC SELECT DISTINCT product_detail 
+-- MAGIC FROM retail.default.bright_coffee_shop_sales
+-- MAGIC WHERE product_detail IS NOT NULL AND product_detail != ''
+-- MAGIC ORDER BY product_detail;
+-- MAGIC
+-- MAGIC -- 1.7 Check earliest and latest transaction times
+-- MAGIC SELECT 
+-- MAGIC     MIN(transaction_time) AS earliest_transaction,
+-- MAGIC     MAX(transaction_time) AS latest_transaction
+-- MAGIC FROM retail.default.bright_coffee_shop_sales;
+-- MAGIC
+-- MAGIC -- 1.8 Count distinct values
+-- MAGIC SELECT 
+-- MAGIC     COUNT(DISTINCT store_location) AS distinct_stores,
+-- MAGIC     COUNT(DISTINCT product_id) AS distinct_products,
+-- MAGIC     COUNT(DISTINCT product_category) AS distinct_categories,
+-- MAGIC     COUNT(DISTINCT product_type) AS distinct_types,
+-- MAGIC     COUNT(DISTINCT product_detail) AS distinct_details
+-- MAGIC FROM retail.default.bright_coffee_shop_sales;
+-- MAGIC
+-- MAGIC -- ============================================================
+-- MAGIC -- SECTION 2: KEY PERFORMANCE INDICATORS (KPIs)
+-- MAGIC -- Purpose: Calculate main business metrics for executive summary
+-- MAGIC -- ============================================================
+-- MAGIC
+-- MAGIC -- 2.1 Get main KPIs: revenue, transactions, average values
+-- MAGIC SELECT 
+-- MAGIC     SUM(transaction_qty) AS total_units_sold,
+-- MAGIC     SUM(transaction_qty * unit_price) AS total_revenue,
+-- MAGIC     COUNT(*) AS total_transactions,
+-- MAGIC     ROUND(AVG(transaction_qty * unit_price), 2) AS avg_transaction_value,
+-- MAGIC     ROUND(SUM(transaction_qty) * 1.0 / COUNT(*), 2) AS avg_units_per_transaction,
+-- MAGIC     MIN(transaction_qty) AS min_quantity,
+-- MAGIC     MAX(transaction_qty) AS max_quantity
+-- MAGIC FROM retail.default.bright_coffee_shop_sales;
+-- MAGIC
+-- MAGIC -- ============================================================
+-- MAGIC -- SECTION 3: DATA QUALITY CHECKS
+-- MAGIC -- Purpose: Identify data quality issues that need fixing
+-- MAGIC -- ============================================================
+-- MAGIC
+-- MAGIC -- 3.1 Check for null values in all columns
+-- MAGIC SELECT 
+-- MAGIC     COUNT(*) AS total_rows,
+-- MAGIC     SUM(CASE WHEN transaction_id IS NULL THEN 1 ELSE 0 END) AS null_transaction_id,
+-- MAGIC     SUM(CASE WHEN transaction_date IS NULL THEN 1 ELSE 0 END) AS null_transaction_date,
+-- MAGIC     SUM(CASE WHEN transaction_time IS NULL THEN 1 ELSE 0 END) AS null_transaction_time,
+-- MAGIC     SUM(CASE WHEN transaction_qty IS NULL THEN 1 ELSE 0 END) AS null_transaction_qty,
+-- MAGIC     SUM(CASE WHEN store_id IS NULL THEN 1 ELSE 0 END) AS null_store_id,
+-- MAGIC     SUM(CASE WHEN store_location IS NULL THEN 1 ELSE 0 END) AS null_store_location,
+-- MAGIC     SUM(CASE WHEN product_id IS NULL THEN 1 ELSE 0 END) AS null_product_id,
+-- MAGIC     SUM(CASE WHEN unit_price IS NULL THEN 1 ELSE 0 END) AS null_unit_price,
+-- MAGIC     SUM(CASE WHEN product_category IS NULL OR product_category = '' THEN 1 ELSE 0 END) AS null_or_blank_category,
+-- MAGIC     SUM(CASE WHEN product_type IS NULL OR product_type = '' THEN 1 ELSE 0 END) AS null_or_blank_type,
+-- MAGIC     SUM(CASE WHEN product_detail IS NULL OR product_detail = '' THEN 1 ELSE 0 END) AS null_or_blank_detail
+-- MAGIC FROM retail.default.bright_coffee_shop_sales;
+-- MAGIC
+-- MAGIC -- 3.2 Check percentage of blanks in category, type, detail
+-- MAGIC SELECT 
+-- MAGIC     COUNT(*) AS total_rows,
+-- MAGIC     SUM(CASE WHEN product_category = '' OR product_category IS NULL THEN 1 ELSE 0 END) AS blank_category,
+-- MAGIC     SUM(CASE WHEN product_type = '' OR product_type IS NULL THEN 1 ELSE 0 END) AS blank_type,
+-- MAGIC     SUM(CASE WHEN product_detail = '' OR product_detail IS NULL THEN 1 ELSE 0 END) AS blank_detail,
+-- MAGIC     ROUND(SUM(CASE WHEN product_category = '' OR product_category IS NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS category_blank_percent,
+-- MAGIC     ROUND(SUM(CASE WHEN product_type = '' OR product_type IS NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS type_blank_percent,
+-- MAGIC     ROUND(SUM(CASE WHEN product_detail = '' OR product_detail IS NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS detail_blank_percent
+-- MAGIC FROM retail.default.bright_coffee_shop_sales;
+-- MAGIC
+-- MAGIC -- 3.3 Check if unit_price has commas instead of dots (e.g., 3,1 instead of 3.1)
+-- MAGIC SELECT DISTINCT unit_price
+-- MAGIC FROM retail.default.bright_coffee_shop_sales
+-- MAGIC WHERE unit_price LIKE '%,%'
+-- MAGIC LIMIT 20;
+-- MAGIC
+-- MAGIC -- 3.4 Check data type of unit_price
+-- MAGIC SELECT 
+-- MAGIC     unit_price,
+-- MAGIC     TYPEOF(unit_price) AS data_type
+-- MAGIC FROM retail.default.bright_coffee_shop_sales
+-- MAGIC LIMIT 5;
+-- MAGIC
+-- MAGIC -- 3.5 Investigate which products have blank category
+-- MAGIC SELECT 
+-- MAGIC     product_id,
+-- MAGIC     COUNT(*) AS transaction_count,
+-- MAGIC     COUNT(DISTINCT product_category) AS distinct_categories,
+-- MAGIC     COLLECT_SET(product_category) AS category_values
+-- MAGIC FROM retail.default.bright_coffee_shop_sales
+-- MAGIC WHERE product_category = '' OR product_category IS NULL
+-- MAGIC GROUP BY product_id
+-- MAGIC ORDER BY transaction_count DESC;
+-- MAGIC
+-- MAGIC -- ============================================================
+-- MAGIC -- SECTION 4: DATA CLEANING (CREATE VIEW FOR POWER BI)
+-- MAGIC -- Purpose: Fill blank product hierarchy values with 'Not Provided'
+-- MAGIC --          so analysis can run on all transactions without losing data
+-- MAGIC --          Data quality issue: 70.5% of rows missing product hierarchy
+-- MAGIC --          This should be raised with data engineering team
+-- MAGIC -- 
+-- MAGIC --          THIS VIEW WILL BE CONNECTED TO POWER BI
+-- MAGIC -- ============================================================
+-- MAGIC
+-- MAGIC CREATE OR REPLACE VIEW retail.default.coffee_sales_cleaned AS
+-- MAGIC SELECT 
+-- MAGIC     transaction_id,
+-- MAGIC     transaction_date,
+-- MAGIC     transaction_time,
+-- MAGIC     transaction_qty,
+-- MAGIC     store_id,
+-- MAGIC     store_location,
+-- MAGIC     product_id,
+-- MAGIC     unit_price,
+-- MAGIC     
+-- MAGIC     -- Fill blanks with 'Not Provided'
+-- MAGIC     CASE 
+-- MAGIC         WHEN product_category IS NULL OR product_category = '' THEN 'Not Provided'
+-- MAGIC         ELSE product_category
+-- MAGIC     END AS product_category,
+-- MAGIC     
+-- MAGIC     CASE 
+-- MAGIC         WHEN product_type IS NULL OR product_type = '' THEN 'Not Provided'
+-- MAGIC         ELSE product_type
+-- MAGIC     END AS product_type,
+-- MAGIC     
+-- MAGIC     CASE 
+-- MAGIC         WHEN product_detail IS NULL OR product_detail = '' THEN 'Not Provided'
+-- MAGIC         ELSE product_detail
+-- MAGIC     END AS product_detail,
+-- MAGIC     
+-- MAGIC     -- Calculate total amount
+-- MAGIC     ROUND(transaction_qty * unit_price, 2) AS total_amount
+-- MAGIC
+-- MAGIC FROM retail.default.bright_coffee_shop_sales;
+-- MAGIC
+-- MAGIC -- 4.1 Verify the view
+-- MAGIC SELECT 
+-- MAGIC     product_category,
+-- MAGIC     COUNT(*) AS transaction_count,
+-- MAGIC     SUM(total_amount) AS revenue
+-- MAGIC FROM retail.default.coffee_sales_cleaned
+-- MAGIC GROUP BY product_category
+-- MAGIC ORDER BY transaction_count DESC;
+-- MAGIC
+-- MAGIC -- 4.2 Check total rows in view (should match original)
+-- MAGIC SELECT 
+-- MAGIC     COUNT(*) AS total_rows_in_view
+-- MAGIC FROM retail.default.coffee_sales_cleaned;
