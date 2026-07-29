@@ -1,8 +1,7 @@
 # Lovable Dashboard - Bright Coffee Shop
 
 ## Dashboard Link
-[Click here to view the live dashboard](https://lovable.dev/projects/bcf39e8d-4e26-4378-891f-6a1397fca73d)
-
+[Click here to view the live dashboard](https://coffee-metrics-spark.lovable.app/)
 ## Pages
 
 ### Page 1: Executive Overview
