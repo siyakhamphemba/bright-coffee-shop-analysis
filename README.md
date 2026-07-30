@@ -1,3 +1,4 @@
+```markdown
 # ☕ Bright Coffee Shop - Sales Performance Analysis
 
 ## Project Overview
@@ -38,6 +39,58 @@ This project analyzes 6 months of transactional sales data (January - June 2023)
 
 ---
 
+## Dashboards
+
+### 1. Databricks Dashboard
+[View Databricks Dashboard](https://dbc-945d6c49-ceaa.cloud.databricks.com/dashboardsv3/01f18a15196a17439a53b1a87e7428ca/published?o=7474649180183059)
+
+### 2. Power BI Dashboard
+[View Power BI Dashboard](04_Dashboards/PowerBI/)
+
+### 3. Looker Studio Dashboard
+[View Looker Studio Dashboard](04_Dashboards/LookerStudio/)
+
+### 4. Lovable Dashboard
+[View Lovable Dashboard](04_Dashboards/Lovable/)
+
+### 5. Excel Pivot Tables
+[View Excel Pivot Tables](04_Dashboards/Excel/)
+
+---
+
+## Dashboard Pages
+
+### Page 1: Executive Overview
+- 3 KPI Cards (Revenue, Transactions, Avg Value)
+- 2 Slicers (Month, Product Category)
+- Revenue by Product Category (Bar Chart)
+- Revenue by 30-Minute Time Bucket (Column Chart)
+
+### Page 2: Product & Time Analysis
+- 2 KPI Cards (Units Sold, Avg Units per Transaction)
+- 2 Slicers (Store Location, Product Type)
+- Revenue by Day of Week (Column Chart)
+- Revenue by Product Type (Stacked Column Chart)
+- Top 10 Best-Selling Products (Bar Chart)
+- Bottom 10 Underperforming Products (Bar Chart)
+
+---
+
+## Tools Used
+
+| Tool | Purpose |
+|------|---------|
+| **Databricks** | Data processing, cleaning, and transformation |
+| **SQL** | Data exploration and analysis queries |
+| **Power BI** | Interactive dashboard (2 pages) |
+| **Looker Studio** | Interactive dashboard (2 pages) |
+| **Lovable** | Interactive dashboard (2 pages) |
+| **Excel** | Pivot tables (8 sheets) and charts |
+| **Draw.io** | Project planning boards |
+| **PowerPoint** | CEO presentation (13 slides) |
+
+---
+
 ## Project Structure
 
 ```
@@ -73,39 +126,6 @@ bright-coffee-shop-analysis/
 └── Methodology.md                             ← Project approach
 
 ```
-
----
-
-## Tools Used
-
-| Tool | Purpose |
-|------|---------|
-| **Databricks** | Data processing, cleaning, and transformation |
-| **SQL** | Data exploration and analysis queries |
-| **Power BI** | Interactive dashboard (2 pages) |
-| **Looker Studio** | Interactive dashboard (2 pages) |
-| **Lovable** | Interactive dashboard (2 pages) |
-| **Excel** | Pivot tables (8 sheets) and charts |
-| **Draw.io** | Project planning boards |
-| **PowerPoint** | CEO presentation (13 slides) |
-
----
-
-## Dashboards
-
-### Page 1: Executive Overview
-- 3 KPI Cards (Revenue, Transactions, Avg Value)
-- 2 Slicers (Month, Product Category)
-- Revenue by Product Category (Bar Chart)
-- Revenue by 30-Minute Time Bucket (Column Chart)
-
-### Page 2: Product & Time Analysis
-- 2 KPI Cards (Units Sold, Avg Units per Transaction)
-- 2 Slicers (Store Location, Product Type)
-- Revenue by Day of Week (Column Chart)
-- Revenue by Product Type (Stacked Column Chart)
-- Top 10 Best-Selling Products (Bar Chart)
-- Bottom 10 Underperforming Products (Bar Chart)
 
 ---
 
@@ -213,23 +233,11 @@ bright-coffee-shop-analysis/
 ### Project Overview
 [View Overview Diagram](https://drive.google.com/file/d/1eM2LAlXkANxti66U3Ta35vLUqKQ0o9KZ/view?usp=sharing)
 
+ |
 
-
-## Next Steps
-
-| Week | Action |
-|------|--------|
-| Week 1 | Data Quality - Schedule meeting with engineering team |
-| Week 2 | Staffing - Adjust schedules to match peak times |
-| Week 3 | Inventory - Increase stock of top products |
-| Week 4 | Marketing - Launch evening promotions and bundling deals |
-| Ongoing | Store Review - Review Astoria operations and share best practices |
-
-
+---
 
 ## Author
 **Siyakha Ntuli**  
 Junior Data Analyst  
 July 2026
-
----
